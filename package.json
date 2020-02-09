@@ -1,6 +1,6 @@
 {
   "name": "webgl-video-player",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Video player using raw  WebGL",
   "main": "server.js",
   "directories": {
