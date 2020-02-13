@@ -2,16 +2,27 @@ console.log('Main script loaded!');
 const canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
 
-canvas.width = 800;
-canvas.height = 600;
+window.addEventListener('resize', resizeCanvas, false);
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+resizeCanvas()
 
 const gl = canvas.getContext('webgl');
 
-const triangleVertices = [
+const vertices = [
   //X      Y
-   0.0,  0.5,
+  -0.5,  0.5,
+   0.5,  0.5,
   -0.5, -0.5,
-   0.5, -0.5
+   0.5, -0.5,
+];
+
+const indices = [
+  0, 1, 2,
+  1, 2, 3,
 ];
 
 const vertexShaderText = `
@@ -75,11 +86,19 @@ if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
   );
 }
 
-const triangleVertexBufferObject = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexBufferObject);
+const vertexBufferObject = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, vertexBufferObject);
 gl.bufferData(
   gl.ARRAY_BUFFER,
-  new Float32Array(triangleVertices),
+  new Float32Array(vertices),
+  gl.STATIC_DRAW
+);
+
+const indexBufferObject = gl.createBuffer();
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBufferObject);
+gl.bufferData(
+  gl.ELEMENT_ARRAY_BUFFER, 
+  new Uint16Array(indices),
   gl.STATIC_DRAW
 );
 
@@ -97,7 +116,7 @@ gl.enableVertexAttribArray(positionAttribLocation);
 
 gl.useProgram(program);
 function draw() {
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 }
 
 draw();
