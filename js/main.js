@@ -2,8 +2,13 @@ console.log('Main script loaded!');
 const canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
 
-canvas.width = 800;
-canvas.height = 600;
+window.addEventListener('resize', resizeCanvas, false);
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+resizeCanvas()
 
 const gl = canvas.getContext('webgl');
 
