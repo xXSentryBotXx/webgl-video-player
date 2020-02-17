@@ -30,8 +30,12 @@ const vertexShaderText = `
 
   attribute vec3 a_vertPosition;
 
+  uniform mat4 u_mWorld;
+  uniform mat4 u_mView;
+  uniform mat4 u_mProj;
+
   void main() {
-    gl_Position = vec4(a_vertPosition, 1.0);
+    gl_Position = u_mProj * u_mView * u_mWorld * vec4(a_vertPosition, 1.0);
   }
 `;
 
@@ -115,6 +119,23 @@ gl.vertexAttribPointer(
 gl.enableVertexAttribArray(positionAttribLocation);
 
 gl.useProgram(program);
+
+const matWorldUniformLocation = gl.getUniformLocation(program, 'u_mWorld');
+const matViewUniformLocation = gl.getUniformLocation(program, 'u_mView');
+const matProjUniformLocation = gl.getUniformLocation(program, 'u_mProj');
+
+const worldMatrix = new Float32Array(16);
+const viewMatrix = new Float32Array(16);
+const projMatrix = new Float32Array(16);
+
+mat4.identity(worldMatrix);
+mat4.lookAt(viewMatrix, [0, 0, -2], [0, 0, 0], [0, 1, 0]);
+mat4.perspective(projMatrix, glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000.0);
+
+gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
+gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
+
 function draw() {
   gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 }
