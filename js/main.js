@@ -14,10 +14,10 @@ const gl = canvas.getContext('webgl');
 
 const vertices = [
   //X      Y
-  -0.5,  0.5,
-   0.5,  0.5,
-  -0.5, -0.5,
-   0.5, -0.5,
+  -1,  0.6,
+   1,  0.6,
+  -1, -0.6,
+   1, -0.6,
 ];
 
 const indices = [
